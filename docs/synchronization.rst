@@ -72,7 +72,7 @@ Example::
 
 
     async def notify(event):
-        await event.set()
+        event.set()
 
 
     async def main():

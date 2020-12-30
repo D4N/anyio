@@ -29,6 +29,7 @@ from .._core._exceptions import ExceptionGroup as BaseExceptionGroup
 from .._core._exceptions import WouldBlock
 from .._core._sockets import GetAddrInfoReturnType, convert_ipv6_sockaddr
 from .._core._synchronization import ResourceGuard
+from .._core._utils import DeprecationWarner
 from ..abc.sockets import IPSockAddrType, UDPPacketType
 
 if sys.version_info >= (3, 7):
@@ -821,17 +822,18 @@ class Condition(abc.Condition):
 
 class Event(abc.Event):
     def __init__(self):
-        self._event = curio.Event()
+        self._future = Future()
 
-    async def set(self) -> None:
-        await self._event.set()
+    def set(self) -> Awaitable:
+        self._future.set_result(None)
+        return DeprecationWarner('Event.set()')
 
     def is_set(self) -> bool:
-        return self._event.is_set()
+        return self._future.done()
 
     async def wait(self):
         await checkpoint()
-        return await self._event.wait()
+        return await curio.traps._future_wait(self._future)
 
 
 class Semaphore(abc.Semaphore):

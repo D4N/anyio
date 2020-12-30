@@ -5,6 +5,8 @@ This library adheres to `Semantic Versioning 2.0 <http://semver.org/>`_.
 
 **UNRELEASED**
 
+- **BACKWARDS INCOMPATIBLE** ``Event.set`` is now synchronous (but returns a dummy awaitable for
+  purposes of compatibility)
 - Fixed ``Event`` objects on the trio backend not inheriting from ``anyio.abc.Event``
 - Fixed ``run_sync_in_worker_thread()`` raising ``UnboundLocalError`` on asyncio when cancelled
 
